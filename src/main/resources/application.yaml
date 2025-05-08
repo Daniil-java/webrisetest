@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     password: password
     username: postgres
-    url: jdbc:postgresql://localhost:5433/webrise
+    url: jdbc:postgresql://localhost:5432/webrise
   jpa:
     hibernate:
       naming:

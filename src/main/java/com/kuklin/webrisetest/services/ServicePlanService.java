@@ -21,7 +21,9 @@ public class ServicePlanService {
     private final ServicePlanRepository servicePlanRepository;
     private final ServicePlanMapper servicePlanMapper;
 
+    //Получение сервиса-подписки
     public ServicePlan getServicePlanByServiceAndIncreaseCounter(Plan plan) {
+        //Проверка существования сервиса-подписки
         ServicePlan servicePlan = servicePlanRepository.findServicePlanByName(plan)
                 .orElseThrow(() -> new ErrorResponseException(ErrorStatus.SERVICE_PLAN_NOT_FOUND));
 
@@ -30,6 +32,7 @@ public class ServicePlanService {
         return servicePlan;
     }
 
+    //Получение топ самых популярных подписок
     public List<ServicePlanDto> getTop3MostPopularSubscriptions() {
         Integer topSize = 3;
         List<ServicePlan> servicePlanDtos = servicePlanRepository

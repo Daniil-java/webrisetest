@@ -11,6 +11,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+//Процесс проверки срока подписки
 public class SubscriptionExpiredScheduleProcessor implements ScheduleProcessor {
     private final SubscriptionService subscriptionService;
 

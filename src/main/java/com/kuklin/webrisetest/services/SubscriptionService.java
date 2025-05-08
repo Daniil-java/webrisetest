@@ -23,16 +23,11 @@ public class SubscriptionService {
     private final ServicePlanService servicePlanService;
     private final UserService userService;
     private final SubscriptionMapper subscriptionMapper;
-    //- Добавление подписки пользователю.
-    //- Получение списка подписок пользователя.
-    //- Удаление подписки.
-    //- Подписки представляют собой подписки на цифровые сервисы, такие как
-    //YouTube Premium, VK Музыка, Яндекс.Плюс, Netflix и другие стриминговые
-    //платформы.
 
     public SubscriptionDto subscribeAndGetDto(Plan plan, Long userId) {
         return subscriptionMapper.toDto(subscribe(plan, userId));
     }
+    //Подписание пользователя на сервис-подписку
     public Subscription subscribe(Plan plan, Long userId) {
         ServicePlan servicePlan = servicePlanService
                 .getServicePlanByServiceAndIncreaseCounter(plan);
@@ -47,7 +42,6 @@ public class SubscriptionService {
                 .setSubscriptionStatus(SubscriptionStatus.LASTS)
                 ;
 
-
         return subscriptionRepository.save(subscription);
     }
 
@@ -61,6 +55,7 @@ public class SubscriptionService {
     public SubscriptionDto stopSubscriptionByIdAndGetDto(Long id) {
         return subscriptionMapper.toDto(stopSubscriptionById(id));
     }
+    //Прекращение подписки пользователя
     public Subscription stopSubscriptionById(Long id) {
         Subscription subscription = subscriptionRepository.findById(id)
                 .orElseThrow(() -> new ErrorResponseException(ErrorStatus.SUBSCRIPTION_NOT_FOUND));
@@ -71,6 +66,7 @@ public class SubscriptionService {
         subscriptionRepository.deleteById(id);
     }
 
+    //Получение всех незакончившихся подписок
     public List<Subscription> getAllLastsSubscription() {
         return subscriptionRepository.findAllBySubscriptionStatus(SubscriptionStatus.LASTS);
     }

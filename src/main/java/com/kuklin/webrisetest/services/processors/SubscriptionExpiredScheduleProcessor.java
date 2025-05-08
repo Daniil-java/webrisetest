@@ -9,9 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Процесс проверки срока подписки
+ */
 @Component
 @RequiredArgsConstructor
-//Процесс проверки срока подписки
 public class SubscriptionExpiredScheduleProcessor implements ScheduleProcessor {
     private final SubscriptionService subscriptionService;
 
@@ -21,7 +23,7 @@ public class SubscriptionExpiredScheduleProcessor implements ScheduleProcessor {
         List<Subscription> subscriptions = subscriptionService.getAllLastsSubscription();
         LocalDate now = LocalDate.now();
 
-        for (Subscription sub: subscriptions) {
+        for (Subscription sub : subscriptions) {
             if (sub.getEndDate().isBefore(now)) {
                 subscriptionService.stopSubscriptionById(sub.getId());
             }

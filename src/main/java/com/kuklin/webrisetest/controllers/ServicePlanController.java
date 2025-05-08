@@ -24,7 +24,6 @@ import java.util.List;
 public class ServicePlanController {
     private final ServicePlanService servicePlanService;
 
-    //Получение топ-3 подписок за все время
     @Operation(
             summary = "Получение топ-3 самых популярных сервисов",
             responses = {

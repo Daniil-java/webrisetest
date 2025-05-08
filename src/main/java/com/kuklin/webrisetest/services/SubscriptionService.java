@@ -27,11 +27,14 @@ public class SubscriptionService {
     public SubscriptionDto subscribeAndGetDto(Plan plan, Long userId) {
         return subscriptionMapper.toDto(subscribe(plan, userId));
     }
-    //Подписание пользователя на сервис-подписку
+
+    /**
+     * Подписание пользователя на сервис-подписку
+     */
     public Subscription subscribe(Plan plan, Long userId) {
-        ServicePlan servicePlan = servicePlanService
-                .getServicePlanByServiceAndIncreaseCounter(plan);
         User user = userService.getUserById(userId);
+        ServicePlan servicePlan = servicePlanService
+                .getServicePlanByService(plan);
 
         LocalDate now = LocalDate.now();
         Subscription subscription = new Subscription()
@@ -39,8 +42,7 @@ public class SubscriptionService {
                 .setServicePlan(servicePlan)
                 .setStartDate(now)
                 .setEndDate(now.plusDays(servicePlan.getDurationDays()))
-                .setSubscriptionStatus(SubscriptionStatus.LASTS)
-                ;
+                .setSubscriptionStatus(SubscriptionStatus.LASTS);
 
         return subscriptionRepository.save(subscription);
     }
@@ -48,6 +50,7 @@ public class SubscriptionService {
     public List<SubscriptionDto> getUserSubscriptionDtoList(Long userId) {
         return subscriptionMapper.toDtoList(getUserSubscriptionList(userId));
     }
+
     public List<Subscription> getUserSubscriptionList(Long userId) {
         return subscriptionRepository.findAllByUserId(userId);
     }
@@ -55,7 +58,10 @@ public class SubscriptionService {
     public SubscriptionDto stopSubscriptionByIdAndGetDto(Long id) {
         return subscriptionMapper.toDto(stopSubscriptionById(id));
     }
-    //Прекращение подписки пользователя
+
+    /**
+     * Прекращение подписки пользователя
+     */
     public Subscription stopSubscriptionById(Long id) {
         Subscription subscription = subscriptionRepository.findById(id)
                 .orElseThrow(() -> new ErrorResponseException(ErrorStatus.SUBSCRIPTION_NOT_FOUND));
@@ -66,7 +72,9 @@ public class SubscriptionService {
         subscriptionRepository.deleteById(id);
     }
 
-    //Получение всех незакончившихся подписок
+    /**
+     * Получение всех незакончившихся подписок
+     */
     public List<Subscription> getAllLastsSubscription() {
         return subscriptionRepository.findAllBySubscriptionStatus(SubscriptionStatus.LASTS);
     }

@@ -14,6 +14,12 @@ import java.util.Optional;
 public interface ServicePlanRepository extends JpaRepository<ServicePlan, Long> {
     Optional<ServicePlan> findServicePlanByName(Plan plan);
 
-    @Query("SELECT s FROM ServicePlan s ORDER BY s.subscribeCount DESC")
+    @Query("""
+    SELECT s 
+    FROM Subscription sub 
+    JOIN sub.servicePlan s 
+    GROUP BY s 
+    ORDER BY COUNT(sub.id) DESC
+    """)
     List<ServicePlan> findTopMostPopularSubscriptions(Pageable pageable);
 }

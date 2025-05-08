@@ -20,7 +20,10 @@ public class UserService {
     public UserDto createUserAndGetDto(UserDto userDto) {
         return userMapper.toDto(createUser(userDto));
     }
-    //Создание нового пользователя
+
+    /**
+     * Создание нового пользователя
+     */
     public User createUser(UserDto userDto) {
         //Проверка валидности электронной почты
         if (!isValidEmail(userDto.getEmail())) {
@@ -33,7 +36,6 @@ public class UserService {
         return userRepository.save(userMapper.toEntity(userDto));
     }
 
-    //Проверка валидности электронной почты
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         return email != null && email.matches(emailRegex);
@@ -42,6 +44,7 @@ public class UserService {
     public UserDto getUserDto(Long id) {
         return userMapper.toDto(getUserById(id));
     }
+
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ErrorResponseException(ErrorStatus.USER_NOT_FOUND));
@@ -50,9 +53,10 @@ public class UserService {
     public UserDto updateUserByIdAndGetDto(Long id, UserDto userDto) {
         return userMapper.toDto(updateUserById(id, userDto));
     }
+
     public User updateUserById(Long id, UserDto userDto) {
         User user = getUserById(id);
-        ////Проверка электронный почты на начилие дупликатов в базе при изменении
+        // Проверка электронный почты на начилие дупликатов в базе при изменении
         if (!user.getEmail().equals(userDto.getEmail())) {
             if (userRepository.existsUserByEmail(userDto.getEmail())) {
                 throw new ErrorResponseException(ErrorStatus.EMAIL_ALREADY_EXISTS);

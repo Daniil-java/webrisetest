@@ -16,18 +16,20 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    //- Создание пользователя.
-    //- Получение информации о пользователе.
-    //- Обновление данных пользователя.
-    //- Удаление пользователя.
 
     public UserDto createUserAndGetDto(UserDto userDto) {
         return userMapper.toDto(createUser(userDto));
     }
+
+    /**
+     * Создание нового пользователя
+     */
     public User createUser(UserDto userDto) {
+        //Проверка валидности электронной почты
         if (!isValidEmail(userDto.getEmail())) {
             throw new ErrorResponseException(ErrorStatus.NOT_VALID_EMAIL);
         }
+        //Проверка электронный почты на начилие дупликатов в базе
         if (userRepository.existsUserByEmail(userDto.getEmail())) {
             throw new ErrorResponseException(ErrorStatus.EMAIL_ALREADY_EXISTS);
         }
@@ -35,13 +37,14 @@ public class UserService {
     }
 
     private boolean isValidEmail(String email) {
-        String emailRegex = "^[A-Za-z0-9+.-]+@A-Za-z0-9.-+$";
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         return email != null && email.matches(emailRegex);
     }
 
     public UserDto getUserDto(Long id) {
         return userMapper.toDto(getUserById(id));
     }
+
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ErrorResponseException(ErrorStatus.USER_NOT_FOUND));
@@ -50,8 +53,10 @@ public class UserService {
     public UserDto updateUserByIdAndGetDto(Long id, UserDto userDto) {
         return userMapper.toDto(updateUserById(id, userDto));
     }
+
     public User updateUserById(Long id, UserDto userDto) {
         User user = getUserById(id);
+        // Проверка электронный почты на начилие дупликатов в базе при изменении
         if (!user.getEmail().equals(userDto.getEmail())) {
             if (userRepository.existsUserByEmail(userDto.getEmail())) {
                 throw new ErrorResponseException(ErrorStatus.EMAIL_ALREADY_EXISTS);

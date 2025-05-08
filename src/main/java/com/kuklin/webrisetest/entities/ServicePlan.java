@@ -25,7 +25,6 @@ public class ServicePlan {
     private String description;
     private Long durationDays;
     private BigDecimal baseCost;
-    private Long subscribeCount;
     @UpdateTimestamp
     private LocalDate updated;
     @CreationTimestamp

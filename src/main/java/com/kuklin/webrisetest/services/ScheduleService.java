@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+//Сервис управления запланнированными процессами
 public class ScheduleService {
     private final SubscriptionExpiredScheduleProcessor subscriptionExpiredScheduleProcessor;
 
